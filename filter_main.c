@@ -1,15 +1,13 @@
-/**
- * This is a program to count how many times
- * each letter of the alphabet occurs in a sample
- * of text
- */
+/*Program that runs statistics and probabilities on the frequencies of letters *
+ *in a book that is in a text file.                                            */
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include <time.h>
 
-#define ALPHABET 26
+#include "filter.h"
+#include "filter_print.h"
+#include "filter_calc.h"
 
 int main(int argc, char** argv)
 {
@@ -20,15 +18,20 @@ int main(int argc, char** argv)
   int letters[ALPHABET] = {0};              //Array to store frequency of letters
   double frequency[ALPHABET] = {0};         //Array to store frequency percentage
   double running_frequency[ALPHABET] = {0}; //Array to store running frequency
- 
-  FILE * inputStream = fopen( "Dracula.txt", "r" ); //opening file
+
+  if(argc != 2){
+    printf("Please enter file.\n");
+    exit(1);
+  }
+  
+  FILE *inputStream = fopen(argv[1], "r"); //opening file
 
   /*Reading first line of file*/
   numberOfCharactersRead = getline(&line, &lengthOfBuffer, inputStream);
   
-  if( numberOfCharactersRead == -1 )
+  if(numberOfCharactersRead == -1)
   {
-    perror( "getline" );
+    perror("getline");
   }
   else
   {
@@ -38,7 +41,7 @@ int main(int argc, char** argv)
       if(line[i] >= 'a' && line[i] <= 'z')
       {
 	letters[line[i] - 'a']++;           //counts letter freq and stores in array
-    total_letters++;
+	total_letters++;
       }
     }
   }
@@ -65,39 +68,20 @@ int main(int argc, char** argv)
     }
   }
   
-  fclose( inputStream );  //Close file
-  free( line );           //Free buffer for line
-  
-  /*Loop to print each letter and number of times it appears. Also divides the         * 
-   *frequency of each letter by the total number of letters and stores it in an array. */
-  for(int k = 0; k < ALPHABET; k++)
-  {
-    printf("%c = %d\n", ('a' + k), letters[k]);
-    frequency[k] = (((double)letters[k])/total_letters);
-  }
-  
-  printf("total number of letters : %d\n", total_letters); //Total number of letters.
-  
-  /*Loop to print frequency of each letter over total letters, also adds the  *
-   *frequencies together to get a running frequency.                          */
-  for(int j = 0; j < ALPHABET; j++)
-  {
-    printf("frequency of %c over total letters = %.2lf%%\n",
-	   ('a' + j), (frequency[j] * 100));
-    
-    if(j > 0)
-      running_frequency[j] = frequency[j] + running_frequency[j-1];
-    else
-      running_frequency[j] = frequency[j];
-  }
-  /*Loop to print running frequency percentages*/
-  for(int m = 0; m < ALPHABET; m++){
-    printf("running frequency[%d] %c =  %.4lf\n",m ,'a' + m ,running_frequency[m]);
-  }
+  fclose(inputStream);  //Close file
+  free(line);           //Free buffer for line
 
+  calc_freq(total_letters, letters, frequency);
+  calc_running(running_frequency, frequency);
+  //printf("total number of letters : %d\n", total_letters);
+  //print_letter_occurance(letters);
+  //print_freq(running_frequency, frequency);
+  //print_running(running_frequency);
+  
   //FILE *fp = fopen("test.txt", "w"); //(file)setup file to write to
-  srand(time(NULL));     //setup
-  double rand_num = 0.0; //setup
+  
+  srand(time(NULL));       //setup
+  double rand_num = 0.0;   //setup
 
   /*Loop to print out random letters using running_frequency probability*/
   for(int j = 0; j < 20; j ++) //change to total_letters for file
@@ -109,7 +93,7 @@ int main(int argc, char** argv)
       if(rand_num >= running_frequency[k-1] && rand_num <= running_frequency[k])
       {
 	printf("%c", 'a' + k);    //(stdin)print random characters to stdin
-	//fputc(('a' + k), fp);       //(file)put random chracter into file
+	//fputc(('a' + k), fp);   //(file)put random chracter into file
       }
     }
     printf("\n"); //(stdin)uncomment with printf in if loop
@@ -119,5 +103,3 @@ int main(int argc, char** argv)
   
   return 0;
 }
-
-
