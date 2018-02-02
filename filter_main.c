@@ -24,6 +24,9 @@ int main(int argc, char** argv)
     exit(1);
   }
   
+  printf("press 0 for info or press 1 for file\n");
+  int info_or_file = getchar(); // bugged ghetto fixed
+
   FILE *inputStream = fopen(argv[1], "r"); //opening file
 
   /*Reading first line of file*/
@@ -73,33 +76,43 @@ int main(int argc, char** argv)
 
   calc_freq(total_letters, letters, frequency);
   calc_running(running_frequency, frequency);
-  //printf("total number of letters : %d\n", total_letters);
-  //print_letter_occurance(letters);
-  //print_freq(running_frequency, frequency);
-  //print_running(running_frequency);
-  
-  //FILE *fp = fopen("test.txt", "w"); //(file)setup file to write to
-  
   srand(time(NULL));       //setup
   double rand_num = 0.0;   //setup
-
-  /*Loop to print out random letters using running_frequency probability*/
-  for(int j = 0; j < 20; j ++) //change to total_letters for file
+  
+  if(info_or_file == 48)
   {
-    rand_num = (double)rand()/RAND_MAX;
-    printf("%lf\n", rand_num); //(stdin)test random number against r_f and correct let 
+    print_info(running_frequency, frequency, letters, total_letters);
     
-    for(int k = 0; k < ALPHABET; k++){
-      if(rand_num >= running_frequency[k-1] && rand_num <= running_frequency[k])
+    /*Loop to print out random letters using running_frequency probability*/
+    for(int j = 0; j < TESTNUMBER; j ++)
+    {
+      rand_num = (double)rand()/RAND_MAX;
+      printf("%lf\n", rand_num); //(stdin)test random number against r_f and correct let 
+    
+      for(int k = 0; k < ALPHABET; k++){
+	if(rand_num >= running_frequency[k-1] && rand_num <= running_frequency[k])
+	  {
+	    printf("%c", 'a' + k);    //(stdin)print random characters to stdin
+	  }
+      }
+      printf("\n"); //(stdin)uncomment with printf in if loop
+    }
+  }
+  else
+  {
+    FILE *fp = fopen("random_letters.txt", "w"); //(file)setup file to write to
+    /*Loop to print out random letters using running_frequency probability*/
+    for(int j = 0; j < total_letters; j ++)
+    {
+      rand_num = (double)rand()/RAND_MAX; 
+      for(int k = 0; k < ALPHABET; k++)
       {
-	printf("%c", 'a' + k);    //(stdin)print random characters to stdin
-	//fputc(('a' + k), fp);   //(file)put random chracter into file
+	if(rand_num >= running_frequency[k-1] && rand_num <= running_frequency[k])
+	  fputc(('a' + k), fp);   //(file)put random chracter into file
       }
     }
-    printf("\n"); //(stdin)uncomment with printf in if loop
+    fclose(fp);
   }
-
-  //fclose(fp); //(file)
   
   return 0;
 }
