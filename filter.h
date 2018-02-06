@@ -1,5 +1,4 @@
-#include <stdio.h>
-
+#define SIZE_OF_WRITE_FILE 30
 #define ALPHABET 26
 #define TESTNUMBER 20
 #define END_OF_FILE -1

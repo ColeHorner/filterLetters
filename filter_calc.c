@@ -1,7 +1,7 @@
 #include "filter.h"
 #include "filter_calc.h"
 
-/*Calculates the frequency of letter over the total number of letters in the file.*/
+/*Calculates the frequency of letter over the total number of letters in the file. */
 void calc_freq(int total_letters, int letters[ALPHABET], double frequency[ALPHABET])
 {
   for(int i = 0; i < ALPHABET; i++)
@@ -10,7 +10,7 @@ void calc_freq(int total_letters, int letters[ALPHABET], double frequency[ALPHAB
     }
 }
 
-/*Loop to calculate the running frequency of the leters.*/
+/*Loop to calculate the running frequency of the leters. */
 void calc_running(double running_frequency[ALPHABET], double frequency[ALPHABET])
 {
   for(int i = 0; i < ALPHABET; i++)
@@ -22,7 +22,7 @@ void calc_running(double running_frequency[ALPHABET], double frequency[ALPHABET]
     }
 }
 
-/*Does all calculations necessary for probability*/
+/*Does all calculations necessary for probability. */
 void calc_all(int total_letters, int letters[ALPHABET],
 	      double running_frequency[ALPHABET], double frequency[ALPHABET])
 {
